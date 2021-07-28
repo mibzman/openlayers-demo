@@ -47,7 +47,7 @@ const vector = new VectorLayer({
 I think we just provide a kml url and it'll just work if you specify the format!!!!!
 
 ```jsx
-https://staging-onosysadmin.azurewebsites.net/restaurants/47514ffc-ed1c-466c-8af1-ad0100ee2769/delivery/kml
+https://<staging>/restaurants/<restaurantID>/delivery/kml
 ```
 
 from open layers
