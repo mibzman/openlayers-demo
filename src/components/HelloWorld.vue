@@ -53,6 +53,11 @@
 </template>
 
 <script>
+
+// https://vue3openlayers.netlify.app/componentsguide/sources/vector/#usage
+// there's probably ways to color those circles something other than white
+
+
 import { ref, inject } from "vue";
 export default {
   setup() {
@@ -61,7 +66,8 @@ export default {
     const zoom = ref(10);
     const rotation = ref(0);
 
-    const url = ref("https://openlayers.org/en/latest/examples/data/kml/2012-02-10.kml");
+    const url = ref("https://<staging>/api/restaurants/<restaurantID>/delivery/kml");
+    
 
     const format = inject('ol-format');
     console.log(format)
