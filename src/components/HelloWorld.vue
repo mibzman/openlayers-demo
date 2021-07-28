@@ -1,42 +1,96 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+<input type="checkbox" id="fullscreencontrol" v-model="fullscreencontrol">
+<label for="fullscreencontrol">fullscreencontrol</label>
+<input type="checkbox" id="attribution" v-model="attributioncontrol">
+<label for="attribution">attributioncontrol</label>
+<input type="checkbox" id="zoom" v-model="zoomcontrol">
+<label for="zoom">zoomcontrol</label>
+<input type="checkbox" id="zoomtoextent" v-model="zoomtoextentcontrol">
+<label for="zoomtoextent">zoomtoextentcontrol</label>
+<input type="checkbox" id="zoomslider" v-model="zoomslidercontrol">
+<label for="zoomslider">zoomslidercontrol</label>
+<input type="checkbox" id="scaleline" v-model="scalelinecontrol">
+<label for="scaleline">scalelinecontrol</label>
+<input type="checkbox" id="overviewmap" v-model="overviewmapcontrol">
+<label for="overviewmap">overviewmapcontrol</label>
+<input type="checkbox" id="mousepositioncontrol" v-model="mousepositioncontrol">
+<label for="mousepositioncontrol">mousepositioncontrol</label>
+<input type="checkbox" id="rotatecontrol" v-model="rotatecontrol">
+<label for="rotatecontrol">rotatecontrol</label>
+
+<ol-map ref="map" :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" style="height:400px">
+
+    <ol-view ref="view" :center="center" :rotation="rotation" :zoom="zoom" :projection="projection" />
+
+    <ol-fullscreen-control v-if="fullscreencontrol" />
+    <ol-mouseposition-control v-if="mousepositioncontrol" />
+    <ol-attribution-control v-if="attributioncontrol" />
+
+    <ol-overviewmap-control v-if="overviewmapcontrol">
+        <ol-tile-layer>
+            <ol-source-osm />
+        </ol-tile-layer>
+    </ol-overviewmap-control>
+
+    <ol-scaleline-control v-if="scalelinecontrol" />
+    <ol-rotate-control v-if="rotatecontrol" />
+    <ol-zoom-control v-if="zoomcontrol" />
+    <ol-zoomslider-control v-if="zoomslidercontrol" />
+    <ol-zoomtoextent-control v-if="zoomtoextentcontrol" :extent="[23.906,42.812,46.934,34.597]" tipLabel="Fit to Turkey" />
+
+    <ol-tile-layer>
+        <ol-source-osm />
+    </ol-tile-layer>
+
+    <ol-vector-layer>
+        <ol-source-vector :url="url" :format="kml">
+
+        </ol-source-vector>
+
+    </ol-vector-layer>
+
+</ol-map>
 </template>
 
 <script>
+import { ref, inject } from "vue";
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+  setup() {
+    const center = ref([-81.51214560283877, 41.07716717533248]);
+    const projection = ref("EPSG:4326");
+    const zoom = ref(10);
+    const rotation = ref(0);
+
+    const url = ref("https://openlayers.org/en/latest/examples/data/kml/2012-02-10.kml");
+
+    const format = inject('ol-format');
+    console.log(format)
+    const kml = new format.KML();
+
+
+    return {
+      center,
+      projection,
+      zoom,
+      rotation,
+      kml,
+      url,
+    };
+  },
+  data() {
+    return {
+      fullscreencontrol: true,
+      attributioncontrol: true,
+      zoomcontrol: true,
+      zoomslidercontrol: true,
+      zoomtoextentcontrol: true,
+      scalelinecontrol: true,
+      overviewmapcontrol: true,
+      mousepositioncontrol: true,
+      rotatecontrol: true,
+    };
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
